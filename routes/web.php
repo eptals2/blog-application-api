@@ -1,15 +1,29 @@
 <?php
 
+use App\Http\Controllers\EmployeeWebController;
+use App\Http\Controllers\ProjectWebController;
+use App\Http\Controllers\TaskWebController;
+use App\Http\Controllers\WebAuthController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return response()->json(['version' => app()->version()]);
+Route::get('/login', [WebAuthController::class, 'showLogin'])
+    ->name('login');
+
+Route::post('/login', [WebAuthController::class, 'login'])
+    ->name('login.store');
+
+Route::post('/logout', [WebAuthController::class, 'logout'])
+    ->name('logout');
+
+Route::middleware('admin.web')->group(function () {
+
+    Route::get('/', function () {
+        return redirect()->route('projects.index');
+    });
+
+    Route::resource('projects', ProjectWebController::class);
+
+    Route::resource('employees', EmployeeWebController::class);
+
+    Route::resource('tasks', TaskWebController::class);
 });
-
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
