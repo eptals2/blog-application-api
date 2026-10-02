@@ -25,7 +25,7 @@ class UpdateEmployeeRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:employees,email,'.$this->route('employee'),
-            'role' => 'sometimes|nullable|string|max:255|default:employee',
+            'role' => 'sometimes|nullable|string|max:255',
         ];
     }
 }
